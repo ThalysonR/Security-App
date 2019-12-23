@@ -1,18 +1,21 @@
 import knex from 'knex';
+import fs from 'fs';
+import path from 'path';
 
 let instance: knex;
 
-function initDb(db: knex) {
-  db.schema.createTable('usuario', tb => {
+async function initDb(db: knex) {
+  fs.unlinkSync(path.join(__dirname, '..', 'app_db'));
+  await db.schema.createTable('usuarios', tb => {
     tb.increments('id').primary();
     tb.string('nome').notNullable();
     tb.string('senha').notNullable();
   });
 }
 
-export function getInstance(): knex {
+export async function getInstance(): Promise<knex> {
   if (instance != null) {
-    return instance;
+    return Promise.resolve(instance);
   }
 
   instance = knex({
@@ -21,6 +24,8 @@ export function getInstance(): knex {
       filename: './app_db',
     },
   });
+  await initDb(instance);
+  console.log('initdb');
 
   return instance;
 }

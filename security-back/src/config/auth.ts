@@ -2,13 +2,19 @@ import passport from 'passport';
 import passportJwt from 'passport-jwt';
 import * as Usuario from '../domain/Usuario';
 
-const params = {
+export const authParams = {
   secretOrKey: 'MY_SECRET_KEY',
-  jwtFromRequest: passportJwt.ExtractJwt.fromAuthHeader(),
+  jwtFromRequest: passportJwt.ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 
+let authInstance;
+
 export default () => {
-  const strategy = new passportJwt.Strategy(params, async (payload, done) => {
+  if (authInstance != null) {
+    return authInstance;
+  }
+
+  const strategy = new passportJwt.Strategy(authParams, async (payload, done) => {
     const usuario = (await Usuario.getOne(payload.id)) || null;
     if (usuario) {
       return done(null, { id: usuario.id });
@@ -17,8 +23,9 @@ export default () => {
     }
   });
   passport.use(strategy);
-  return {
+  authInstance = {
     initialize: () => passport.initialize(),
     authenticate: () => passport.authenticate('jwt', { session: false }),
   };
+  return authInstance;
 };
