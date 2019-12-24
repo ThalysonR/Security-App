@@ -19,7 +19,7 @@ const routes: Array<(app: Application) => void> = [
           const token = jwt.sign({ id: usuario.id }, authParams.secretOrKey, {
             expiresIn: 300,
           });
-          res.status(200).send({ auth: true, token });
+          res.status(200).json({ auth: true, token });
         } else {
           res.status(401).send('Login inválido');
         }

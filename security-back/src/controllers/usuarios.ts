@@ -16,12 +16,12 @@ const routes: Array<(app: Application) => void> = [
       }
     }),
   app =>
-    app.get('/usuarios', auth().authenticate(), async (req, res) =>
+    app.get('/usuarios', auth().authenticate(), async (req, res) => {
       res.json(
         await UsuarioDao.findAll().then(usuarios =>
           Array.from(usuarios).map(usuario => ({ ...usuario, senha: null })),
         ),
-      ),
-    ),
+      );
+    }),
 ];
 export default routes;

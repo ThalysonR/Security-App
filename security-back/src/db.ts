@@ -11,6 +11,15 @@ async function initDb(db: knex) {
     tb.string('nome').notNullable();
     tb.string('senha').notNullable();
   });
+  await db.schema.createTable('comentarios', tb => {
+    tb.increments('id').primary();
+    tb.bigInteger('id_usuario')
+      .notNullable()
+      .references('id')
+      .inTable('usuarios')
+      .onDelete('CASCADE');
+    tb.text('comentario').notNullable();
+  });
 }
 
 export async function getInstance(): Promise<knex> {
