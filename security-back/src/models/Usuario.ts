@@ -4,7 +4,7 @@ export interface Usuario {
   senha: string;
 }
 /**
- * Validações em qualquer input vindo do usuário. Vide ataque 'Cross Site Scripting (XSS)'
+ * [Segurança] Validações em qualquer input vindo do usuário. Vide ataque 'Cross Site Scripting (XSS)'
  */
 export const constraints = {
   nome: {

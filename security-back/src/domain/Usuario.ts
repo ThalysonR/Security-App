@@ -3,7 +3,7 @@ import { Usuario } from '../models/Usuario';
 import bcrypt from 'bcryptjs';
 
 /**
- * Todas as funções que inserem novas informações no banco através de input do usuário usam parameter binding
+ * [Segurança] Todas as funções que inserem novas informações no banco através de input do usuário usam parameter binding
  * para que a biblioteca cuide de 'escapar' os caracteres especiais. Vide 'SQL Injection'
  */
 
@@ -31,7 +31,7 @@ export async function findByNome(nome: string) {
 }
 
 /**
- * Na criação do usuário, encriptamos a senha usando bcrypt.
+ * [Segurança] Na criação do usuário, encriptamos a senha usando bcrypt.
  * Geramos também um 'salt' que será armazenado com a senha. Vide ataque 'Rainbow Table'
  */
 export async function createUsuario(usuario: Usuario) {

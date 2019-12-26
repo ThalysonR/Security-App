@@ -5,13 +5,8 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import React, { useContext, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { AuthContext } from '../components/AuthContext';
-
-/**
- * [Segurança] No componente login, caso haja alguma falha na autenticação, o usuário não deve ter feedback do campo exato que causou a falha,
- * ou ainda se o usuário sequer existe. (Ataque de força bruta)
- */
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,8 +23,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-async function entrar(usuario, senha, setToken, openSnack) {
-  const res = await fetch('http://localhost:8080/auth', {
+async function salvar(usuario, senha, history, openSnack) {
+  const res = await fetch('http://localhost:8080/usuarios', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -38,16 +33,15 @@ async function entrar(usuario, senha, setToken, openSnack) {
     body: JSON.stringify({ nome: usuario, senha }),
   });
   if (!res.ok) {
-    const msg = (await res.json()).message;
-    openSnack(msg, 'error');
-    return;
+    openSnack('Falha ao cadastrar', 'error');
   }
-  setToken((await res.json()).token);
+  history.push('/');
 }
 
 export default function({ openSnack }) {
   const classes = useStyles();
-  const { token, setToken } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
+  const history = useHistory();
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
 
@@ -58,7 +52,7 @@ export default function({ openSnack }) {
       <Card className={classes.card}>
         <CardContent>
           <Typography variant="h5" component="h2">
-            Login
+            Cadastro
           </Typography>
           <form>
             <div>
@@ -85,10 +79,10 @@ export default function({ openSnack }) {
                 type="submit"
                 onClick={event => {
                   event.preventDefault();
-                  entrar(usuario, senha, setToken, openSnack);
+                  salvar(usuario, senha, history, openSnack);
                 }}
               >
-                Entrar
+                Salvar
               </Button>
             </div>
           </form>

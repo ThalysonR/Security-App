@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { authParams } from '../config/auth';
 
 /**
- * Criamos um token criptografado com HMAC onde inserimos apenas o ID.
+ * [Segurança] Criamos um token criptografado com HMAC onde inserimos apenas o ID.
  * Método de autenticação: JWT
  */
 const routes: Array<(app: Application) => void> = [
@@ -14,6 +14,11 @@ const routes: Array<(app: Application) => void> = [
       if (req.body.nome && req.body.senha) {
         const { nome, senha } = req.body;
         const usuario = await Usuario.findByNome(nome);
+        console.log(usuario);
+        if (!usuario) {
+          res.status(401).json({ message: 'Login inválido' });
+          return;
+        }
         const correctPw = bcrypt.compareSync(senha, usuario.senha);
         if (correctPw) {
           const token = jwt.sign({ id: usuario.id }, authParams.secretOrKey, {
@@ -21,7 +26,7 @@ const routes: Array<(app: Application) => void> = [
           });
           res.status(200).json({ auth: true, token });
         } else {
-          res.status(401).send('Login inválido');
+          res.status(401).json({ message: 'Login inválido' });
         }
       }
     }),

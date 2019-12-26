@@ -20,7 +20,16 @@ function ConditionalButton() {
   const { token, setToken } = useContext(AuthContext);
   const history = useHistory();
   if (token === '') {
-    return <Button color="inherit">Login</Button>;
+    return (
+      <Fragment>
+        <Button color="inherit" onClick={() => history.push('/')}>
+          Login
+        </Button>
+        <Button color="inherit" onClick={() => history.push('/cadastro')}>
+          Cadastro
+        </Button>
+      </Fragment>
+    );
   }
   return (
     <Fragment>

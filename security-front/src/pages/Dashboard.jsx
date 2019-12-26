@@ -7,6 +7,11 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { AuthContext } from '../components/AuthContext';
 
+/**
+ * [Segurança] Quando há algum texto renderizado na página proveniente do usuário, o texto deve ser 'escapado'
+ * através do uso de algum encoding. Felizmente, o react já faz isso por padrão. (Cross-Site-Scripting, XSS)
+ */
+
 const useStyles = makeStyles(theme => ({
   root: {
     height: '80%',
